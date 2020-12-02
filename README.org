@@ -1,0 +1,2 @@
+* Advent of code 2020
+Structure mostly based on https://github.com/samcoy3/advent-of-code-template, but with all stack stuff removed and added unit tests. This is also an excuse to try out [[https://hackage.haskell.org/package/relude][relude]].
