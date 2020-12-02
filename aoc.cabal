@@ -36,12 +36,14 @@ common shared
   build-depends:
     , attoparsec
     , base-noprelude      >=4.7 && <5
+    , bytestring
     , containers
     , directory
     , parser-combinators
     , pointedlist
     , raw-strings-qq
     , relude
+    , text
     , vector
 
 library
@@ -77,21 +79,19 @@ library
   hs-source-dirs:  src
 
 executable aoc
-  import:           shared
-  main-is:          Main.hs
-  hs-source-dirs:   app
-  ghc-options:      -Wall -threaded -rtsopts -with-rtsopts=-N
+  import:         shared
+  main-is:        Main.hs
+  hs-source-dirs: app
+  ghc-options:    -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
     , aoc
     , optparse-applicative
 
-
 test-suite specs
-  import: shared
-  type: exitcode-stdio-1.0
-  main-is: Spec.hs
+  import:             shared
+  type:               exitcode-stdio-1.0
+  main-is:            Spec.hs
   other-modules:
-    Test
     Days.Day01Spec
     Days.Day02Spec
     Days.Day03Spec
@@ -117,10 +117,13 @@ test-suite specs
     Days.Day23Spec
     Days.Day24Spec
     Days.Day25Spec
+    Test
+
   default-extensions: QuasiQuotes
-  hs-source-dirs: tests
-  ghc-options:      -Wall -threaded -rtsopts -with-rtsopts=-N
+  hs-source-dirs:     tests
+  ghc-options:        -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
     , aoc
     , hspec
-  build-tool-depends: hspec-discover:hspec-discover == 2.*
+
+  build-tool-depends: hspec-discover:hspec-discover ==2.*

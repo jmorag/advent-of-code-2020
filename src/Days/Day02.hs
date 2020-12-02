@@ -1,31 +1,57 @@
 module Days.Day02 (runDay, Input, OutputA, OutputB, runA, runB) where
 
-import Data.Attoparsec.Text
+import Data.Attoparsec.ByteString.Char8
+import qualified Data.ByteString.Char8 as B
 
 runDay :: Bool -> String -> IO ()
 runDay = run inputParser partA partB
 
-runA :: Text -> Either String OutputA
+runA :: ByteString -> Either String OutputA
 runA input = runPart input inputParser partA
 
-runB :: Text -> Either String OutputB
+runB :: ByteString -> Either String OutputB
 runB input = runPart input inputParser partB
 
 ------------ PARSER ------------
 inputParser :: Parser Input
-inputParser = error "Not implemented yet!"
+inputParser = sepBy pwd endOfLine
+  where
+    pwd =
+      Password
+        <$> (decimal <* char '-')
+        <*> (decimal <* space)
+        <*> (anyChar <* string ": ")
+        <*> takeWhile1 (inClass "a-z")
 
 ------------ TYPES ------------
-type Input = Void
+data Password = Password
+  { _minChar :: Int
+  , _maxChar :: Int
+  , _char :: Char
+  , _password :: ByteString
+  }
+  deriving (Show, Eq)
+type Input = [Password]
 
-type OutputA = Void
+type OutputA = Int
 
-type OutputB = Void
+type OutputB = Int
 
 ------------ PART A ------------
 partA :: Input -> OutputA
-partA = error "Not implemented yet!"
+partA = length . filter validPassword
+
+validPassword :: Password -> Bool
+validPassword Password {..} =
+  let nChar = B.length (B.filter (== _char) _password)
+   in nChar >= _minChar && nChar <= _maxChar
 
 ------------ PART B ------------
 partB :: Input -> OutputB
-partB = error "Not implemented yet!"
+partB = length . filter validPasswordB
+
+-- One of _minChar or _maxChar indices must contain _char
+validPasswordB :: Password -> Bool
+validPasswordB Password {..} =
+  (_password `B.index` (_minChar - 1) == _char)
+    /= (_password `B.index` (_maxChar - 1) == _char)
