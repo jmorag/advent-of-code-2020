@@ -1,14 +1,14 @@
 module Days.Day15 (runDay, Input, OutputA, OutputB, runA, runB) where
 
-import Data.Attoparsec.Text
+import Data.Attoparsec.ByteString.Char8
 
 runDay :: Bool -> String -> IO ()
 runDay = run inputParser partA partB
 
-runA :: Text -> Either String OutputA
+runA :: ByteString -> Either String OutputA
 runA input = runPart input inputParser partA
 
-runB :: Text -> Either String OutputB
+runB :: ByteString -> Either String OutputB
 runB input = runPart input inputParser partB
 
 ------------ PARSER ------------

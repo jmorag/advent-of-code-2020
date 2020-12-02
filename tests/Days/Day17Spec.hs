@@ -3,7 +3,7 @@ module Days.Day17Spec (spec) where
 import Days.Day17
 import Test
 
-testInput :: Text
+testInput :: ByteString
 testInput = [r||]
 
 spec :: Spec
