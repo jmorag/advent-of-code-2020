@@ -31,10 +31,11 @@ partB :: Input -> OutputB
 partB = comboProd 2020 3
 
 comboProd :: (Eq a, Num a) => a -> Int -> [a] -> a
-comboProd goal n input = (\case [x] -> x; _ -> error "Expect one working combination") do
-  combo <- combinations n input
-  guard (sum combo == goal)
-  pure (product combo)
+comboProd goal n input =
+  (\case [x] -> x; _ -> error "Expect one working combination") do
+    combo <- combinations n input
+    guard (sum combo == goal)
+    pure (product combo)
 
 combinations :: Int -> [a] -> [[a]]
 combinations 0 _ = [[]]
