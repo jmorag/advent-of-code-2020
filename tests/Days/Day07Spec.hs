@@ -6,11 +6,15 @@ import Test
 testInput :: ByteString
 testInput = [r||]
 
+a :: OutputA -> Expectation
+a = (runA testInput ===)
+
+b :: OutputB -> Expectation
+b = (runB testInput ===)
+
 spec :: Spec
 spec = do
   describe "Part a" do
-    xit "" $
-      runA testInput === error "unknown"
-  describe "Part a" do
-    xit "" $
-      runA testInput === error "unknown"
+    xit "" $ a undefined
+  describe "Part b" do
+    xit "" $ b undefined
