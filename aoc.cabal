@@ -34,6 +34,7 @@ common shared
     TypeApplications
 
   build-depends:
+    , array
     , attoparsec
     , base-noprelude      >=4.7 && <5
     , bytestring
