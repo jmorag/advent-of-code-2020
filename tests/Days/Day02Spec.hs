@@ -14,6 +14,6 @@ spec = do
   describe "Part a" do
     it "correctly identifies 2 passwords as valid" $
       runA testInput === 2
-  describe "Part a" do
+  describe "Part b" do
     it "correctly identifies 1 password as valid according to the new policy" $
       runB testInput === 1
