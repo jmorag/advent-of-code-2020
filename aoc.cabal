@@ -40,6 +40,7 @@ common shared
     , bytestring
     , containers
     , directory
+    , errors
     , parser-combinators
     , pointedlist
     , raw-strings-qq
