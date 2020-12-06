@@ -10,8 +10,8 @@ module Days.Day05 (
   boardingPassParser,
 ) where
 
-import Data.Attoparsec.ByteString.Char8 as Atto
 import Data.Foldable
+import qualified Data.List.NonEmpty as NE
 
 runDay :: Bool -> String -> IO ()
 runDay = run inputParser partA partB
@@ -48,7 +48,7 @@ data Half = Upper | Lower
 data BoardingPass = BoardingPass {rowDirs :: [Half], colDirs :: [Half]}
   deriving (Show)
 
-type Input = [BoardingPass]
+type Input = NonEmpty BoardingPass
 
 type OutputA = Int
 
@@ -81,7 +81,7 @@ makeBinTree nBits = go 0 (2 ^ nBits - 1)
 ------------ PART B ------------
 partB :: Input -> OutputB
 partB ps =
-  let ids@(i : _) = sort (map (seatId . findSeat) ps)
-   in case find (\(sId, ix) -> ix < sId) (zip ids [i ..]) of
+  let (i :| ids) = NE.sort (fmap (seatId . findSeat) ps)
+   in case find (\(sId, ix) -> ix < sId) (zip (i : ids) [i ..]) of
         Just (_, ix) -> ix
         Nothing -> error "Couldn't find seat"

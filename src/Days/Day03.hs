@@ -1,7 +1,6 @@
 module Days.Day03 (runDay, Input, OutputA, OutputB, runA, runB) where
 
 import Data.Array
-import Data.Attoparsec.ByteString.Char8
 
 runDay :: Bool -> String -> IO ()
 runDay = run inputParser partA partB
@@ -16,10 +15,10 @@ runB input = runPart input inputParser partB
 inputParser :: Parser Input
 inputParser = do
   let squareParser = Open <$ char '.' <|> Tree <$ char '#'
-  rows@(r : _) <- sepBy1 (many1 squareParser) endOfLine
-  let nRows = length rows
+  (r :| rs) <- sepBy1 (many squareParser) endOfLine
+  let nRows = length rs + 1
       nCols = length r
-  pure $ listArray ((0, 0), (nRows - 1, nCols - 1)) (concat rows)
+  pure $ listArray ((0, 0), (nRows - 1, nCols - 1)) (concat (r : rs))
 
 ------------ TYPES ------------
 data Square = Open | Tree
