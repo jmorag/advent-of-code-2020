@@ -50,6 +50,7 @@ common shared
 
 library
   import:          shared
+  ghc-options:     -Wall
   exposed-modules:
     Days.Day01
     Days.Day02

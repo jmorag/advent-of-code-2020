@@ -1,6 +1,17 @@
-module Days.Day05 (runDay, Input, OutputA, OutputB, runA, runB) where
+module Days.Day05 (
+  runDay,
+  Input,
+  OutputA,
+  OutputB,
+  runA,
+  runB,
+  findSeat,
+  Seat (..),
+  boardingPassParser,
+) where
 
-import Data.Attoparsec.ByteString.Char8
+import Data.Attoparsec.ByteString.Char8 as Atto
+import Data.Foldable
 
 runDay :: Bool -> String -> IO ()
 runDay = run inputParser partA partB
@@ -13,19 +24,64 @@ runB input = runPart input inputParser partB
 
 ------------ PARSER ------------
 inputParser :: Parser Input
-inputParser = error "Not implemented yet!"
+inputParser = sepBy1 boardingPassParser endOfLine
+
+boardingPassParser :: Parser BoardingPass
+boardingPassParser = do
+  rowDirs <- count 7 $ Lower <$ char 'F' <|> Upper <$ char 'B'
+  colDirs <- count 3 $ Lower <$ char 'L' <|> Upper <$ char 'R'
+  pure $ BoardingPass {..}
 
 ------------ TYPES ------------
-type Input = Void
+data Seat = Seat {row :: Int, col :: Int}
+  deriving (Show, Eq)
 
-type OutputA = Void
+seatId :: Seat -> Int
+seatId Seat {..} = row * 8 + col
 
-type OutputB = Void
+data BinTree = Node BinTree BinTree | Leaf Int
+  deriving (Show)
+
+data Half = Upper | Lower
+  deriving (Show)
+
+data BoardingPass = BoardingPass {rowDirs :: [Half], colDirs :: [Half]}
+  deriving (Show)
+
+type Input = [BoardingPass]
+
+type OutputA = Int
+
+type OutputB = Int
 
 ------------ PART A ------------
 partA :: Input -> OutputA
-partA = error "Not implemented yet!"
+partA = maximum . fmap (seatId . findSeat)
+
+findSeat :: BoardingPass -> Seat
+findSeat BoardingPass {..} = Seat (search rowDirs) (search colDirs)
+
+search :: [Half] -> Int
+search dirs = go dirs (makeBinTree (length dirs))
+  where
+    go [] (Leaf x) = x
+    go (d : ds) (Node l r) = go ds case d of Upper -> r; Lower -> l
+    go _ _ = error "impossible tree"
+
+makeBinTree :: Int -> BinTree
+makeBinTree nBits | nBits < 1 = error "makeBinTree called with less than 1 bit"
+makeBinTree nBits = go 0 (2 ^ nBits - 1)
+  where
+    go low high
+      | high - low == 1 = Node (Leaf low) (Leaf high)
+      | otherwise =
+        let mid = ((high - low) `div` 2) + low
+         in Node (go low mid) (go (mid + 1) high)
 
 ------------ PART B ------------
 partB :: Input -> OutputB
-partB = error "Not implemented yet!"
+partB ps =
+  let ids@(i : _) = sort (map (seatId . findSeat) ps)
+   in case find (\(sId, ix) -> ix < sId) (zip ids [i ..]) of
+        Just (_, ix) -> ix
+        Nothing -> error "Couldn't find seat"
