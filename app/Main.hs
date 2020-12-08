@@ -30,6 +30,7 @@ import qualified Days.Day25 as Day25 (runDay)
 import qualified Data.Map as Map
 import Options.Applicative
 import Text.Printf (printf)
+import Prelude hiding (Parser, option)
 
 data Days
   = AllDays
@@ -42,9 +43,6 @@ data Days
 type Verbosity = Bool
 
 data Options = Options Days Verbosity
-
-validate :: Int -> Maybe Int
-validate n = if (n `elem` Map.keys days) then (Just n) else Nothing
 
 dayParser :: Parser Days
 dayParser = (OneDay <$> day <*> input) <|> allDays
@@ -114,23 +112,17 @@ days =
 
 performDay :: Options -> IO ()
 performDay (Options d v) = case d of
-  AllDays ->
-    sequence_ $
-      fmap
-        ( \(d', (a, i)) -> do
-            putStrLn $ "\n***Day " ++ (printf "%02d" d') ++ "***"
-            a v i
-        )
-        (Map.toList days)
+  AllDays -> forM_
+    (Map.toList days)
+    \(d', (a, i)) -> printf "\n***Day %02d***\n" d' >> a v i
   OneDay {..} ->
-    case validate day >>= (days Map.!?) of
+    case days Map.!? day of
       Nothing -> putStrLn "Invalid day provided. There are 25 days in Advent."
       Just (d', i) -> do
         let i' = fromMaybe i input
-        putStrLn $ "\n***Day " ++ (printf "%02d" day) ++ "***"
+        printf "\n***Day %02d***\n" day
         d' v i'
         putStrLn "************"
-
 
 main :: IO ()
 main = performDay =<< execParser opts

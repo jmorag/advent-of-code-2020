@@ -15,7 +15,8 @@ testInput =
 .#........#
 #.##...#...
 #...##....#
-.#..#...#.#|]
+.#..#...#.#
+|]
 
 a :: OutputA -> Expectation
 a = (runA testInput ===)

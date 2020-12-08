@@ -1,3 +1,5 @@
+{-# LANGUAGE BangPatterns #-}
+
 module Days.Day03 (runDay, Input, OutputA, OutputB, runA, runB) where
 
 import Data.Array
@@ -16,7 +18,7 @@ inputParser :: Parser Input
 inputParser = do
   let squareParser = Open <$ char '.' <|> Tree <$ char '#'
   (r :| rs) <- sepBy1 (many squareParser) endOfLine
-  let nRows = length rs + 1
+  let nRows = length rs
       nCols = length r
   pure $ listArray ((0, 0), (nRows - 1, nCols - 1)) (concat (r : rs))
 
@@ -31,7 +33,7 @@ type Input = Array (Int, Int) Square
 
 type OutputA = Int
 
-type OutputB = Int
+type OutputB = Product Int
 
 ------------ PART A ------------
 partA :: Input -> OutputA
@@ -41,14 +43,13 @@ nTrees :: Array (Int, Int) Square -> Slope -> Int
 nTrees grid Slope {..} = go 0 (0, 0)
   where
     (_, (rows, cols)) = bounds grid
-    go acc (i, j) = if i > rows then acc else go acc' (i + down, j + right)
+    go !acc (i, j) = if i > rows then acc else go acc' (i + down, j + right)
       where
         acc' = acc + case grid ! (i, j `mod` (cols + 1)) of Tree -> 1; Open -> 0
 
 ------------ PART B ------------
 partB :: Input -> OutputB
 partB grid =
-  getProduct $
-    foldMap
-      (Product . nTrees grid)
-      [Slope 1 1, Slope 3 1, Slope 5 1, Slope 7 1, Slope 1 2]
+  foldMap
+    (Product . nTrees grid)
+    [Slope 1 1, Slope 3 1, Slope 5 1, Slope 7 1, Slope 1 2]
