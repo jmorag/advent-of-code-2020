@@ -1,5 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
-
 module Days.Day03 (runDay, Input, OutputA, OutputB, runA, runB) where
 
 import Data.Array
