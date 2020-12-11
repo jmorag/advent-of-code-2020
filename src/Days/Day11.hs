@@ -1,5 +1,8 @@
 module Days.Day11 (runDay, Input, OutputA, OutputB, runA, runB) where
 
+import Data.Array
+import GHC.Show
+
 runDay :: Bool -> String -> IO ()
 runDay = run inputParser partA partB
 
@@ -11,12 +14,19 @@ runB input = runPart input inputParser partB
 
 ------------ PARSER ------------
 inputParser :: Parser Input
-inputParser = error "Not implemented yet!"
+inputParser = gridParser [('L', Empty), ('#', Occupied), ('.', Floor)]
 
 ------------ TYPES ------------
-type Input = Void
+data Cell = Empty | Occupied | Floor
+instance Show Cell where
+  show = \case
+    Empty -> "L"
+    Occupied -> "#"
+    Floor -> "."
 
-type OutputA = Void
+type Input = Array (Int, Int) Cell
+
+type OutputA = Int
 
 type OutputB = Void
 

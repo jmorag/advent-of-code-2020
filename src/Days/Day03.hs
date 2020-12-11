@@ -13,12 +13,7 @@ runB input = runPart input inputParser partB
 
 ------------ PARSER ------------
 inputParser :: Parser Input
-inputParser = do
-  let squareParser = Open <$ char '.' <|> Tree <$ char '#'
-  (r :| rs) <- sepBy1 (many squareParser) endOfLine
-  let nRows = length rs
-      nCols = length r
-  pure $ listArray ((0, 0), (nRows - 1, nCols - 1)) (concat (r : rs))
+inputParser = gridParser [('.', Open), ('#', Tree)]
 
 ------------ TYPES ------------
 data Square = Open | Tree

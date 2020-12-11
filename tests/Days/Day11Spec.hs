@@ -4,7 +4,18 @@ import Days.Day11
 import Test
 
 testInput :: ByteString
-testInput = [r||]
+testInput =
+  [r|L.LL.LL.LL
+LLLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLLL
+L.LLLLLL.L
+L.LLLLL.LL
+|]
 
 a :: OutputA -> Expectation
 a = (runA testInput ===)
@@ -15,6 +26,6 @@ b = (runB testInput ===)
 spec :: Spec
 spec = do
   describe "Part a" do
-    xit "" $ a undefined
+    it "should count seats after converging" $ a 37
   describe "Part b" do
     xit "" $ b undefined

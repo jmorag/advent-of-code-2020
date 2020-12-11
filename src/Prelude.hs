@@ -1,5 +1,16 @@
-module Prelude (module X, run, runPart, V.Vector, many1, sepBy1, combinations, sortNE) where
+module Prelude (
+  module X,
+  run,
+  runPart,
+  V.Vector,
+  many1,
+  sepBy1,
+  combinations,
+  sortNE,
+  gridParser,
+) where
 
+import Data.Array
 import Data.Attoparsec.ByteString.Char8 as X hiding (many1, sepBy1)
 import qualified Data.Attoparsec.ByteString.Char8 as Atto
 import qualified Data.Vector as V
@@ -45,3 +56,12 @@ combinations _ [] = []
 
 sortNE :: Ord a => NonEmpty a -> NonEmpty a
 sortNE (x :| xs) = case sort (x : xs) of (y : ys) -> y :| ys; _ -> error "impossible"
+
+-- Parse a 2d 0-indexed matrix with rows separated by lines
+gridParser :: [(Char, a)] -> Parser (Array (Int, Int) a)
+gridParser cellFromChar = do
+  let cellParser = choice $ map (\(c, cell) -> cell <$ char c) cellFromChar
+  (r :| rs) <- sepBy1 (many cellParser) endOfLine
+  let nRows = length rs
+      nCols = length r
+  pure $ listArray ((0, 0), (nRows - 1, nCols - 1)) (concat (r : rs))
