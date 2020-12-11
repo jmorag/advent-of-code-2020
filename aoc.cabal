@@ -43,6 +43,7 @@ common shared
     , directory
     , errors
     , graphite
+    , monad-memo
     , parser-combinators
     , pointedlist
     , raw-strings-qq
@@ -52,7 +53,7 @@ common shared
 
 library
   import:          shared
-  ghc-options:     -Wall
+  ghc-options:     -Wall -Wincomplete-uni-patterns
   exposed-modules:
     Days.Day01
     Days.Day02

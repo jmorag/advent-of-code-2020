@@ -1,6 +1,7 @@
 module Days.Day10 (runDay, Input, OutputA, OutputB, runA, runB) where
 
-import Data.Attoparsec.ByteString.Char8
+import Control.Monad.Memo
+import Relude.Extra (maximum1)
 
 runDay :: Bool -> String -> IO ()
 runDay = run inputParser partA partB
@@ -13,19 +14,37 @@ runB input = runPart input inputParser partB
 
 ------------ PARSER ------------
 inputParser :: Parser Input
-inputParser = error "Not implemented yet!"
+inputParser = sepBy1 decimal endOfLine
 
 ------------ TYPES ------------
-type Input = Void
+type Input = NonEmpty Int
 
-type OutputA = Void
+type OutputA = Int
 
-type OutputB = Void
+type OutputB = Int
 
 ------------ PART A ------------
 partA :: Input -> OutputA
-partA = error "Not implemented yet!"
+partA input = let (x, y) = findDiffs input in x * y
+
+findDiffs :: NonEmpty Int -> (Int, Int)
+findDiffs input =
+  let (hd :| tl) = transformInput input
+      diffs = zipWith (\x y -> abs (x - y)) (hd : tl) tl
+      num n = length $ filter (== n) diffs
+   in (num 1, num 3)
+
+transformInput :: NonEmpty Int -> NonEmpty Int
+transformInput input = case sortNE input of
+  (i :| is) -> 0 :| i : is <> [maximum1 (i :| is) + 3]
 
 ------------ PART B ------------
 partB :: Input -> OutputB
-partB = error "Not implemented yet!"
+partB input = startEvalMemo (nConfigM (transformInput input)) `div` 2
+
+nConfigM :: NonEmpty Int -> Memo (NonEmpty Int) Int Int
+nConfigM (_ :| []) = pure 1
+nConfigM (x :| y : xs) =
+  if y - x <= 3
+    then liftA2 (+) (memo nConfigM (x :| xs)) (memo nConfigM (y :| xs))
+    else pure 0
