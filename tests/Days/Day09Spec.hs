@@ -4,17 +4,38 @@ import Days.Day09
 import Test
 
 testInput :: ByteString
-testInput = [r||]
+testInput =
+  [r|35
+20
+15
+25
+47
+40
+62
+55
+65
+95
+102
+117
+150
+182
+127
+219
+299
+277
+309
+576
+|]
 
 a :: OutputA -> Expectation
-a = (runA testInput ===)
+a = (runATest testInput ===)
 
 b :: OutputB -> Expectation
-b = (runB testInput ===)
+b = (runBTest testInput ===)
 
 spec :: Spec
 spec = do
   describe "Part a" do
-    xit "" $ a undefined
+    it "should find the first invalid input" $ a 127
   describe "Part b" do
-    xit "" $ b undefined
+    it "should find the sum of the smallest and largest numbers in the contiguous run of numbers summing to the goal" $ b 62

@@ -1,4 +1,4 @@
-module Prelude (module X, run, runPart, V.Vector, many1, sepBy1) where
+module Prelude (module X, run, runPart, V.Vector, many1, sepBy1, combinations, sortNE) where
 
 import Data.Attoparsec.ByteString.Char8 as X hiding (many1, sepBy1)
 import qualified Data.Attoparsec.ByteString.Char8 as Atto
@@ -37,3 +37,11 @@ sepBy1 p sep =
   Atto.sepBy1 p sep <&> \case
     x : xs -> x :| xs
     [] -> error "impossible - sepBy1 returned empty list"
+
+combinations :: Int -> [a] -> [[a]]
+combinations 0 _ = [[]]
+combinations n (x : xs) = ((x :) <$> combinations (n - 1) xs) <> combinations n xs
+combinations _ [] = []
+
+sortNE :: Ord a => NonEmpty a -> NonEmpty a
+sortNE (x :| xs) = case sort (x : xs) of (y : ys) -> y :| ys; _ -> error "impossible"

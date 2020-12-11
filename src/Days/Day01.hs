@@ -1,7 +1,5 @@
 module Days.Day01 (runDay, Input, OutputA, OutputB, runA, runB) where
 
-import Data.Attoparsec.ByteString.Char8
-
 runDay :: Bool -> String -> IO ()
 runDay = run inputParser partA partB
 
@@ -36,8 +34,3 @@ comboProd goal n input =
     combo <- combinations n input
     guard (sum combo == goal)
     pure (product combo)
-
-combinations :: Int -> [a] -> [[a]]
-combinations 0 _ = [[]]
-combinations n (x : xs) = ((x :) <$> combinations (n - 1) xs) <> combinations n xs
-combinations _ [] = []
