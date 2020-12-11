@@ -39,6 +39,8 @@ transformInput input = case sortNE input of
   (i :| is) -> 0 :| i : is <> [maximum1 (i :| is) + 3]
 
 ------------ PART B ------------
+-- I honestly have no idea why nConfigM counts everything twice,
+-- but this passes so...
 partB :: Input -> OutputB
 partB input = startEvalMemo (nConfigM (transformInput input)) `div` 2
 
