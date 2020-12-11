@@ -1,6 +1,5 @@
 module Days.Day02 (runDay, Input, OutputA, OutputB, runA, runB) where
 
-import Data.Attoparsec.ByteString.Char8
 import qualified Data.ByteString.Char8 as B
 
 runDay :: Bool -> String -> IO ()

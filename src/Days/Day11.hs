@@ -1,7 +1,5 @@
 module Days.Day11 (runDay, Input, OutputA, OutputB, runA, runB) where
 
-import Data.Attoparsec.ByteString.Char8
-
 runDay :: Bool -> String -> IO ()
 runDay = run inputParser partA partB
 

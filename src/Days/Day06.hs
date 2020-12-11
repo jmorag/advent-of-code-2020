@@ -1,6 +1,5 @@
 module Days.Day06 (runDay, Input, OutputA, OutputB, runA, runB) where
 
-import Data.Attoparsec.ByteString.Char8
 import qualified Data.Set as S
 import Relude.Extra.Foldable1
 
