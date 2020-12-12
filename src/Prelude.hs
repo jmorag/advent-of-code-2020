@@ -8,6 +8,7 @@ module Prelude (
   combinations,
   sortNE,
   gridParser,
+  debugArray,
 ) where
 
 import Data.Array
@@ -57,6 +58,7 @@ combinations _ [] = []
 sortNE :: Ord a => NonEmpty a -> NonEmpty a
 sortNE (x :| xs) = case sort (x : xs) of (y : ys) -> y :| ys; _ -> error "impossible"
 
+-- 2d array utils
 -- Parse a 2d 0-indexed matrix with rows separated by lines
 gridParser :: [(Char, a)] -> Parser (Array (Int, Int) a)
 gridParser cellFromChar = do
@@ -65,3 +67,10 @@ gridParser cellFromChar = do
   let nRows = length rs
       nCols = length r
   pure $ listArray ((0, 0), (nRows - 1, nCols - 1)) (concat (r : rs))
+
+debugArray :: Show a => Array (Int, Int) a -> IO ()
+debugArray arr =
+  let (_, (n, m)) = bounds arr
+   in forM_ [0 .. n] \i -> do
+        forM_ [0 .. m] \j -> putStr (show (arr ! (i, j)))
+        putStrLn ""
